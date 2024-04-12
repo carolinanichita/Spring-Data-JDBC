@@ -12,6 +12,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import spring.data.jdbc.entity.Author;
 import spring.data.jdbc.entity.Book;
+import spring.data.jdbc.mapper.AuthorMapper;
+import spring.data.jdbc.mapper.BookMapper;
 import spring.data.jdbc.repository.AuthorRepository;
 import spring.data.jdbc.repository.BookRepository;
 
@@ -22,46 +24,18 @@ public class JdbcApplication implements CommandLineRunner {
 		SpringApplication.run(JdbcApplication.class, args);
 	}
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private BookMapper bookMapper;
 	@Autowired
-	private BookRepository bookRepository;
-	@Autowired
-	private AuthorRepository authorRepository;
+	private AuthorMapper authorMapper;
 
 	@Override
 	public void run(String... args) throws Exception {
-		log.info("CRUD features started");
+		log.info("find and insert book using ibatis mapper");
 
-		log.info("CREATE");
+		log.info(String.valueOf(bookMapper.getBook(1L)));
+		log.info(String.valueOf(bookMapper.saveBook("Zero to one", "Notes on startups, or How to build the future")));
 
-		Book egoIsTheEnemy = new Book();
-		egoIsTheEnemy.setName("Ego is the enemy");
-		egoIsTheEnemy.setSummary("The fight to master our greatest opponent");
-		bookRepository.save(egoIsTheEnemy);
-
-		Author ryanHoliday = new Author();
-		ryanHoliday.setFirstName("Ryan");
-		ryanHoliday.setLastName("Holiday");
-		authorRepository.save(ryanHoliday);
-
-		log.info("READ");
-
-		log.info(String.valueOf(bookRepository.findById(ryanHoliday.getId())));
-		log.info(String.valueOf(authorRepository.findById(ryanHoliday.getId())));
-
-		log.info("UPDATE");
-
-		egoIsTheEnemy.setSummary("The fight to master our greatest opponent from Ryan Holiday");
-		bookRepository.save(egoIsTheEnemy);
-
-		ryanHoliday.setLastName("Holi");
-		authorRepository.save(ryanHoliday);
-
-		log.info("DELETE");
-
-		bookRepository.delete(egoIsTheEnemy);
-		authorRepository.delete(ryanHoliday);
-
-		log.info("CRUD features done");
+		log.info(String.valueOf(authorMapper.getAuthor(1L)));
+		log.info(String.valueOf(authorMapper.saveAuthor("Peter", "Theil")));
 	}
 }
